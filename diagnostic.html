@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI活用タイプ診断｜髙橋健太郎</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;700&family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --navy: #1C3557;
+      --navy-dark: #111f33;
+      --orange: #E87C3E;
+      --orange-light: #fdf0e8;
+      --text: #1a1a2e;
+      --text-mid: #5a5a6e;
+      --text-light: #aaa;
+      --line: #e4e4ec;
+      --bg-warm: #faf9f7;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Noto Sans JP', -apple-system, BlinkMacSystemFont, 'Hiragino Sans', sans-serif;
+      color: var(--text);
+      background: var(--bg-warm);
+      min-height: 100vh;
+    }
+
+    /* ── HEADER ── */
+    .header {
+      background: var(--navy);
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .header-logo { color: #fff; font-size: 13px; font-weight: 700; }
+    .header-label { color: rgba(255,255,255,0.5); font-size: 11px; letter-spacing: 0.1em; }
+
+    /* ── PROGRESS ── */
+    .progress-wrap {
+      background: #fff;
+      padding: 14px 20px 0;
+      border-bottom: 1px solid var(--line);
+    }
+    .progress-meta {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      color: var(--text-mid);
+      margin-bottom: 8px;
+    }
+    .progress-bar { height: 3px; background: var(--line); border-radius: 2px; overflow: hidden; margin-bottom: 0; }
+    .progress-fill {
+      height: 100%;
+      background: var(--orange);
+      border-radius: 2px;
+      transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* ── QUESTION ── */
+    .main { max-width: 560px; margin: 0 auto; padding: 32px 20px 60px; }
+
+    .q-screen { display: none; }
+    .q-screen.active { display: block; animation: fadeUp 0.3s ease both; }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .q-num {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      color: var(--orange);
+      margin-bottom: 14px;
+    }
+
+    .q-text {
+      font-family: 'Noto Serif JP', serif;
+      font-size: clamp(17px, 4.5vw, 21px);
+      font-weight: 700;
+      line-height: 1.75;
+      color: var(--navy);
+      margin-bottom: 28px;
+    }
+
+    .options { display: grid; gap: 10px; }
+
+    .option {
+      background: #fff;
+      border: 2px solid var(--line);
+      border-radius: 10px;
+      padding: 16px 18px;
+      font-size: 14px;
+      line-height: 1.75;
+      color: var(--text);
+      cursor: pointer;
+      text-align: left;
+      width: 100%;
+      font-family: inherit;
+      transition: border-color 0.15s, background 0.15s, transform 0.12s;
+      position: relative;
+    }
+    .option::before {
+      content: '';
+      display: inline-block;
+      width: 18px;
+      height: 18px;
+      border: 2px solid var(--line);
+      border-radius: 50%;
+      vertical-align: middle;
+      margin-right: 10px;
+      flex-shrink: 0;
+      transition: border-color 0.15s, background 0.15s;
+    }
+    .option:hover {
+      border-color: var(--orange);
+      transform: translateY(-1px);
+    }
+    .option.selected {
+      border-color: var(--orange);
+      background: var(--orange-light);
+    }
+    .option.selected::before {
+      border-color: var(--orange);
+      background: var(--orange);
+    }
+    .option:disabled { cursor: default; }
+
+    /* ── RESULT ── */
+    .result-screen {
+      display: none;
+      max-width: 560px;
+      margin: 0 auto;
+      padding: 36px 20px 60px;
+      animation: fadeUp 0.5s ease both;
+    }
+    .result-screen.active { display: block; }
+
+    .result-eyebrow {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.22em;
+      color: var(--orange);
+      margin-bottom: 10px;
+    }
+
+    .result-type-name {
+      font-family: 'Noto Serif JP', serif;
+      font-size: clamp(24px, 6vw, 32px);
+      font-weight: 700;
+      color: var(--navy);
+      line-height: 1.5;
+      margin-bottom: 6px;
+    }
+
+    .result-axes {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 24px;
+    }
+    .axis-badge {
+      padding: 5px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 700;
+    }
+    .axis-badge.ok { background: var(--orange-light); color: var(--orange); }
+    .axis-badge.ng { background: #eef2f7; color: var(--text-mid); }
+
+    .result-img {
+      width: 100%;
+      max-height: 200px;
+      object-fit: contain;
+      object-position: center bottom;
+      margin-bottom: 24px;
+      border-radius: 8px;
+    }
+
+    .result-locked {
+      position: relative;
+      margin-bottom: 24px;
+    }
+    .result-locked-content {
+      background: #fff;
+      border-radius: 10px;
+      padding: 22px 20px;
+      border-left: 4px solid var(--orange);
+      filter: blur(5px);
+      user-select: none;
+      pointer-events: none;
+    }
+    .result-locked-content p { font-size: 14px; line-height: 2; color: var(--text-mid); }
+    .result-locked-overlay {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+    .lock-icon {
+      font-size: 24px;
+      line-height: 1;
+    }
+    .lock-label {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--navy);
+    }
+
+    .btn-line {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      background: #06C755;
+      color: #fff;
+      padding: 20px 24px;
+      border-radius: 10px;
+      font-size: 17px;
+      font-weight: 700;
+      text-decoration: none;
+      margin-bottom: 8px;
+      transition: opacity 0.18s;
+      line-height: 1.5;
+      text-align: center;
+    }
+    .btn-line:hover { opacity: 0.88; }
+    .btn-line-sub {
+      font-size: 12px;
+      font-weight: 400;
+      opacity: 0.85;
+      display: block;
+      margin-top: 4px;
+    }
+
+    .cta-note {
+      font-size: 11px;
+      color: var(--text-light);
+      text-align: center;
+      margin-top: 8px;
+      margin-bottom: 20px;
+    }
+
+    .btn-consult {
+      display: block;
+      background: transparent;
+      color: var(--text-mid);
+      padding: 12px 24px;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 700;
+      text-decoration: none;
+      text-align: center;
+      border: 1px solid var(--line);
+      transition: background 0.15s;
+    }
+    .btn-consult:hover { background: #eef2f7; }
+
+    /* ── CALCULATING ── */
+    .calculating {
+      display: none;
+      text-align: center;
+      padding: 80px 20px;
+    }
+    .calculating.active { display: block; animation: fadeUp 0.3s ease both; }
+    .spinner {
+      width: 40px;
+      height: 40px;
+      border: 3px solid var(--line);
+      border-top-color: var(--orange);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin: 0 auto 20px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .calculating p { font-size: 14px; color: var(--text-mid); }
+  </style>
+</head>
+<body>
+
+<div class="header">
+  <span class="header-logo">髙橋健太郎</span>
+  <span class="header-label">AI活用タイプ診断</span>
+</div>
+
+<div class="progress-wrap" id="progressWrap">
+  <div class="progress-meta">
+    <span id="progressText">質問 1 / 6</span>
+    <span id="progressPct">17%</span>
+  </div>
+  <div class="progress-bar">
+    <div class="progress-fill" id="progressFill" style="width:17%"></div>
+  </div>
+</div>
+
+<!-- Questions -->
+<div class="main" id="questionWrap">
+
+  <!-- Q1 -->
+  <div class="q-screen active" id="q0">
+    <p class="q-num">Q1 / 6</p>
+    <p class="q-text">AIツール（ChatGPT、Claude、Geminiなど）を、どれくらいの頻度で使っていますか？</p>
+    <div class="options">
+      <button class="option" onclick="answer(0,0,0,0)">ほぼ毎日使っている</button>
+      <button class="option" onclick="answer(0,1,0,0)">週に2〜3回は使う</button>
+      <button class="option" onclick="answer(0,2,1,1)">月に数回、思い出した時に使う</button>
+      <button class="option" onclick="answer(0,3,2,2)">ほとんど使っていない・登録だけしている</button>
+    </div>
+  </div>
+
+  <!-- Q2 -->
+  <div class="q-screen" id="q1">
+    <p class="q-num">Q2 / 6</p>
+    <p class="q-text">最後にAIを使った時、どう感じましたか？</p>
+    <div class="options">
+      <button class="option" onclick="answer(1,0,0,0)">期待通りで、満足した</button>
+      <button class="option" onclick="answer(1,1,1,1)">使えてはいるが、もっと活用できる気がする</button>
+      <button class="option" onclick="answer(1,2,2,2)">使うより、自分でやった方が早かった</button>
+      <button class="option" onclick="answer(1,3,3,3)">何を聞けばいいかわからず、開いて閉じた</button>
+    </div>
+  </div>
+
+  <!-- Q3 -->
+  <div class="q-screen" id="q2">
+    <p class="q-num">Q3 / 6</p>
+    <p class="q-text">AIに任せられたら一番楽になる「具体的な業務」はどれに近いですか？</p>
+    <div class="options">
+      <button class="option" onclick="answer(2,0,0,1)">毎週繰り返している定型業務（請求書・経費・週次報告など）</button>
+      <button class="option" onclick="answer(2,1,1,1)">頭の中だけで考えている判断業務（企画・戦略・意思決定など）</button>
+      <button class="option" onclick="answer(2,2,1,1)">人と人の間に立つ調整業務（メール返信・会議調整・外部対応など）</button>
+      <button class="option" onclick="answer(2,3,0,1)">集中したい時の周辺業務（リサーチ・要約・資料整形など）</button>
+    </div>
+  </div>
+
+  <!-- Q4 -->
+  <div class="q-screen" id="q3">
+    <p class="q-num">Q4 / 6</p>
+    <p class="q-text">AIを使ってみて「これは無理かも」と諦めたことはありますか？</p>
+    <div class="options">
+      <button class="option" onclick="answer(3,0,1,2)">期待した答えが返ってこなくて、使うのをやめた</button>
+      <button class="option" onclick="answer(3,1,2,1)">自分の業務に当てはまらない気がして、距離を置いた</button>
+      <button class="option" onclick="answer(3,2,0,0)">続ける時間が取れなくて、いつの間にか開かなくなった</button>
+      <button class="option" onclick="answer(3,3,1,1)">諦めたというより、まだ本気で向き合っていない</button>
+    </div>
+  </div>
+
+  <!-- Q5 -->
+  <div class="q-screen" id="q4">
+    <p class="q-num">Q5 / 6</p>
+    <p class="q-text">AIを使いこなせていない一番の原因は、自分のどこにあると感じますか？</p>
+    <div class="options">
+      <button class="option" onclick="answer(4,0,4,0)">そもそも何を聞けばいいかが言葉にできない</button>
+      <button class="option" onclick="answer(4,1,0,4)">AIの得意・不得意がわからず、的外れな使い方をしている気がする</button>
+      <button class="option" onclick="answer(4,2,1,1)">続ける習慣がなく、必要な時に思い出せない</button>
+      <button class="option" onclick="answer(4,3,2,2)">ツールが多すぎて、どれを軸にすればいいかわからない</button>
+    </div>
+  </div>
+
+  <!-- Q6 -->
+  <div class="q-screen" id="q5">
+    <p class="q-num">Q6 / 6</p>
+    <p class="q-text">何かに取り組む時、どんなスタイルが自分に近いですか？</p>
+    <div class="options">
+      <button class="option" onclick="answer(5,0,1,1)">完璧に準備してから動きたい、中途半端は嫌い</button>
+      <button class="option" onclick="answer(5,1,0,0)">6〜7割で動き出して、走りながら整える</button>
+      <button class="option" onclick="answer(5,2,1,1)">とりあえず動いてみる、考えるのは後</button>
+      <button class="option" onclick="answer(5,3,2,1)">納得できるまで考えて、動けないことも多い</button>
+    </div>
+  </div>
+
+</div>
+
+<!-- Calculating -->
+<div class="calculating" id="calculating">
+  <div class="spinner"></div>
+  <p>診断中...</p>
+</div>
+
+<!-- Result -->
+<div class="result-screen" id="resultScreen">
+  <p class="result-eyebrow">YOUR TYPE</p>
+  <p class="result-type-name" id="resultTypeName"></p>
+  <div class="result-axes" id="resultAxes"></div>
+  <img id="resultImg" class="result-img" alt="">
+
+  <!-- Locked detail -->
+  <div class="result-locked">
+    <div class="result-locked-content">
+      <p>あなたの詰まりポイントは、自分の課題をうまく言葉にできていないことにあります。AIに何を聞けばいいかわからない状態のまま使い続けると、どんなツールを使っても的外れな答えしか返ってきません。最初の一歩は言語化にあります。</p>
+    </div>
+    <div class="result-locked-overlay">
+      <span class="lock-icon">🔒</span>
+      <span class="lock-label">詳細はLINEで受け取れます</span>
+    </div>
+  </div>
+
+  <a href="https://line.me/R/ti/p/@164dzuok" class="btn-line">
+    LINEで詳細と処方箋を受け取る
+    <span class="btn-line-sub">あなたのタイプに合った5日間の処方箋が届きます・無料</span>
+  </a>
+  <p class="cta-note">費用は一切かかりません</p>
+  <a href="https://line.me/R/oaMessage/@164dzuok/?text=%E7%9B%B8%E8%AB%87%E3%81%97%E3%81%9F%E3%81%84%E3%81%A7%E3%81%99" class="btn-consult">まず話を聞いてほしい方 → 無料相談（30分）</a>
+</div>
+
+<script>
+  const langScore = [0];
+  const specScore = [0];
+  const TOTAL = 6;
+  let current = 0;
+
+  const types = {
+    aligned: {
+      name: '整っているタイプ',
+      langOk: true, specOk: true,
+      img: 'images/type-aligned.jpeg',
+      point: '自分の課題を言葉にする力も、AIで何ができるかの理解も、すでに持っています。あとは「どこで使うか」の場面を意識的に増やすフェーズです。',
+      next: 'あなたのステージに合った使い方の深め方を、5日間のLINEメッセージでお届けします。使いこなせている人がさらに一歩進む処方箋です。',
+    },
+    'trial-error': {
+      name: '手探り使いタイプ',
+      langOk: true, specOk: false,
+      img: 'images/type-trial-error.jpeg',
+      point: '「自分が困っていること」は言葉にできています。でも「それをAIでどう解決するか」がまだ見えていない。AIの得意なこと・動かし方を知れば、一気に使い道が広がります。',
+      next: 'あなたの業務でAIが使える「具体的な場面」の見つけ方を5日間でお届けします。',
+    },
+    'no-question': {
+      name: '問いが立てられないタイプ',
+      langOk: false, specOk: true,
+      img: 'images/type-no-question.jpeg',
+      point: 'AIの使い方は知っている。でも「自分は何を聞けばいいのか」が言葉になっていない。課題を言語化する一歩が踏み出せると、今の知識が一気に活きてきます。',
+      next: '「何を聞けばいいか」を引き出す問いの立て方を5日間でお届けします。',
+    },
+    startline: {
+      name: 'スタートライン手前タイプ',
+      langOk: false, specOk: false,
+      img: 'images/type-startline.jpeg',
+      point: 'AIを使いこなせていないことは自覚している。でも「何から始めればいいか」もよくわからない。ここにいる人が一番多く、一番変わります。最初の一歩を一緒に作りましょう。',
+      next: 'あなたに合った最初の一歩と、最初に使うべき場面を5日間でお届けします。',
+    },
+  };
+
+  function answer(qIndex, optIndex, lang, spec) {
+    // Disable all buttons in this question
+    const btns = document.querySelectorAll(`#q${qIndex} .option`);
+    btns.forEach(b => b.disabled = true);
+    btns[optIndex].classList.add('selected');
+
+    langScore[0] += lang;
+    specScore[0] += spec;
+
+    setTimeout(() => {
+      if (qIndex < TOTAL - 1) {
+        showQuestion(qIndex + 1);
+      } else {
+        showCalculating();
+      }
+    }, 300);
+  }
+
+  function showQuestion(index) {
+    document.querySelectorAll('.q-screen').forEach(el => el.classList.remove('active'));
+    document.getElementById(`q${index}`).classList.add('active');
+    current = index;
+    updateProgress(index + 1);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function updateProgress(step) {
+    const pct = Math.round((step / TOTAL) * 100);
+    document.getElementById('progressFill').style.width = pct + '%';
+    document.getElementById('progressText').textContent = `質問 ${step} / ${TOTAL}`;
+    document.getElementById('progressPct').textContent = pct + '%';
+  }
+
+  function showCalculating() {
+    document.getElementById('progressWrap').style.display = 'none';
+    document.getElementById('questionWrap').style.display = 'none';
+    document.getElementById('calculating').classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    setTimeout(showResult, 1400);
+  }
+
+  function showResult() {
+    const lw = langScore[0] >= 6;
+    const sw = specScore[0] >= 5;
+
+    let key;
+    if (!lw && !sw) key = 'aligned';
+    else if (!lw && sw)  key = 'trial-error';
+    else if (lw && !sw)  key = 'no-question';
+    else                 key = 'startline';
+
+    const t = types[key];
+
+    document.getElementById('resultTypeName').textContent = t.name;
+    document.getElementById('resultImg').src = t.img;
+    document.getElementById('resultImg').alt = t.name;
+
+    const axesEl = document.getElementById('resultAxes');
+    axesEl.innerHTML = `
+      <span class="axis-badge ${t.langOk ? 'ok' : 'ng'}">言語化：${t.langOk ? '問題なし ✓' : '要トレーニング'}</span>
+      <span class="axis-badge ${t.specOk ? 'ok' : 'ng'}">特性理解：${t.specOk ? '問題なし ✓' : '要インプット'}</span>
+    `;
+
+    // LINE button: pre-fill type name so Lステップ can auto-tag
+    const encoded = encodeURIComponent(`診断タイプ：${t.name}`);
+    document.getElementById('lineBtn').href = `https://line.me/R/oaMessage/@164dzuok/?text=${encoded}`;
+
+    document.getElementById('calculating').classList.remove('active');
+    document.getElementById('resultScreen').classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+</script>
+</body>
+</html>

@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AIを使いこなせない理由、1〜2分でわかります｜髙橋健太郎</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;700&family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --navy: #1C3557;
+      --navy-dark: #111f33;
+      --orange: #E87C3E;
+      --orange-light: #fdf0e8;
+      --text: #1a1a2e;
+      --text-mid: #5a5a6e;
+      --text-light: #aaa;
+      --line: #e4e4ec;
+      --bg-warm: #faf9f7;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Noto Sans JP', -apple-system, BlinkMacSystemFont, 'Hiragino Sans', sans-serif;
+      color: var(--text);
+      line-height: 1.9;
+      background: #fff;
+      font-size: 16px;
+    }
+
+    .wrap { max-width: 680px; margin: 0 auto; padding: 0 28px; }
+
+    /* ── HERO ── */
+    .hero {
+      position: relative;
+      background-image: url('images/hero-desk-workspace.jpeg');
+      background-size: cover;
+      background-position: center 35%;
+      padding: 80px 0 72px;
+      color: #fff;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(160deg, rgba(17,31,51,0.94) 0%, rgba(28,53,87,0.82) 100%);
+    }
+    .hero .wrap { position: relative; z-index: 1; }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(232,124,62,0.18);
+      border: 1px solid rgba(232,124,62,0.5);
+      border-radius: 20px;
+      padding: 5px 14px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      color: var(--orange);
+      margin-bottom: 28px;
+    }
+    .hero-badge::before { content: '●'; font-size: 8px; }
+
+    .hero h1 {
+      font-family: 'Noto Serif JP', serif;
+      font-size: clamp(28px, 6vw, 46px);
+      font-weight: 700;
+      line-height: 1.55;
+      letter-spacing: 0.01em;
+      margin-bottom: 28px;
+    }
+    .hero h1 em {
+      font-style: normal;
+      color: var(--orange);
+      border-bottom: 2px solid var(--orange);
+      padding-bottom: 2px;
+    }
+
+    .hero-stat {
+      display: flex;
+      align-items: baseline;
+      gap: 4px;
+      margin-bottom: 32px;
+      opacity: 0.75;
+      font-size: 13px;
+    }
+    .hero-stat strong {
+      font-family: 'Noto Serif JP', serif;
+      font-size: 42px;
+      font-weight: 700;
+      color: #fff;
+      opacity: 1;
+      line-height: 1;
+    }
+
+    .hero-cta-wrap { display: grid; gap: 10px; max-width: 440px; margin-bottom: 16px; }
+
+    .btn-main {
+      display: block;
+      background: var(--orange);
+      color: #fff;
+      padding: 18px 28px;
+      border-radius: 4px;
+      font-size: 16px;
+      font-weight: 700;
+      text-decoration: none;
+      text-align: center;
+      letter-spacing: 0.04em;
+      transition: opacity 0.18s, transform 0.18s;
+    }
+    .btn-main:hover { opacity: 0.88; transform: translateY(-1px); }
+
+    .btn-sub {
+      display: block;
+      background: transparent;
+      color: rgba(255,255,255,0.88);
+      padding: 16px 28px;
+      border-radius: 4px;
+      font-size: 14px;
+      font-weight: 700;
+      text-decoration: none;
+      text-align: center;
+      letter-spacing: 0.04em;
+      border: 1px solid rgba(255,255,255,0.28);
+      transition: background 0.18s;
+    }
+    .btn-sub:hover { background: rgba(255,255,255,0.08); }
+
+    .hero-note { font-size: 11px; opacity: 0.35; text-align: center; }
+
+    /* ── SECTIONS ── */
+    .section { padding: 80px 0; }
+    .section-warm { background: var(--bg-warm); }
+    .section-dark { background: var(--navy); color: #fff; }
+
+    .sec-eyebrow {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      color: var(--orange);
+      margin-bottom: 10px;
+      display: block;
+    }
+    .sec-title {
+      font-family: 'Noto Serif JP', serif;
+      font-size: clamp(22px, 4vw, 32px);
+      font-weight: 700;
+      line-height: 1.5;
+      margin-bottom: 12px;
+    }
+    .sec-lead {
+      font-size: 15px;
+      color: var(--text-mid);
+      line-height: 2;
+      margin-bottom: 44px;
+    }
+
+    /* ── TARGET CHECKS ── */
+    .check-list { list-style: none; }
+    .check-list li {
+      display: flex;
+      gap: 14px;
+      padding: 15px 0;
+      border-bottom: 1px solid var(--line);
+      font-size: 15px;
+      line-height: 1.7;
+      align-items: flex-start;
+    }
+    .check-list li:first-child { border-top: 1px solid var(--line); }
+    .check-list li::before {
+      content: '✓';
+      color: var(--orange);
+      font-weight: 700;
+      font-size: 14px;
+      flex-shrink: 0;
+      margin-top: 3px;
+      width: 16px;
+    }
+
+    /* ── AXIS CARDS ── */
+    .axis-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0; margin-bottom: 52px; border: 1px solid var(--line); border-radius: 6px; overflow: hidden; }
+    .axis-card {
+      padding: 28px 24px;
+      position: relative;
+    }
+    .axis-card:first-child { border-right: 1px solid var(--line); }
+    .axis-number {
+      font-family: 'Noto Serif JP', serif;
+      font-size: 48px;
+      font-weight: 700;
+      color: var(--line);
+      line-height: 1;
+      margin-bottom: 12px;
+    }
+    .axis-tag {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      color: var(--orange);
+      margin-bottom: 6px;
+    }
+    .axis-name {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 8px;
+      line-height: 1.4;
+    }
+    .axis-desc { font-size: 13px; color: var(--text-mid); line-height: 1.85; }
+
+    /* ── QUADRANT ── */
+    .quadrant-wrap {
+      margin-bottom: 48px;
+      position: relative;
+    }
+    .quadrant-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--navy);
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .quadrant {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3px;
+      background: var(--line);
+      border-radius: 4px;
+      overflow: hidden;
+      position: relative;
+    }
+    .quadrant-axis-x {
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      color: var(--text-light);
+      margin-bottom: 6px;
+      padding: 0 2px;
+    }
+    .quadrant-axis-y-wrap {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .quadrant-axis-y {
+      font-size: 11px;
+      color: var(--text-light);
+      writing-mode: vertical-rl;
+      transform: rotate(180deg);
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .q-card {
+      background: #fff;
+      padding: 20px 18px;
+      position: relative;
+    }
+    .q-card-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      color: var(--orange);
+      margin-bottom: 6px;
+    }
+    .q-card-name {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 6px;
+      line-height: 1.4;
+    }
+    .q-card-desc { font-size: 12px; color: var(--text-mid); line-height: 1.8; }
+    .q-card-you {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: var(--orange);
+      color: #fff;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 10px;
+      letter-spacing: 0.06em;
+    }
+
+    /* ── PROCESS ── */
+    .process-list { display: grid; gap: 0; }
+    .process-item {
+      display: flex;
+      gap: 20px;
+      padding: 28px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.12);
+      align-items: center;
+    }
+    .process-item:first-child { border-top: 1px solid rgba(255,255,255,0.12); }
+    .process-icon {
+      width: 64px;
+      height: 64px;
+      border-radius: 8px;
+      object-fit: cover;
+      flex-shrink: 0;
+      margin-left: auto;
+      opacity: 0.92;
+    }
+    .process-n {
+      font-family: 'Noto Serif JP', serif;
+      font-size: 36px;
+      font-weight: 700;
+      color: var(--orange);
+      line-height: 1;
+      flex-shrink: 0;
+      width: 40px;
+      padding-top: 2px;
+    }
+    .process-time {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      color: rgba(255,255,255,0.4);
+      margin-bottom: 4px;
+    }
+    .process-name {
+      font-size: 16px;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 4px;
+    }
+    .process-desc { font-size: 13px; color: rgba(255,255,255,0.6); line-height: 1.85; }
+
+    /* ── TYPE CARD IMG ── */
+    .q-card-img {
+      width: 100%;
+      height: 140px;
+      object-fit: contain;
+      object-position: center bottom;
+      border-radius: 4px;
+      margin-bottom: 10px;
+      display: block;
+    }
+
+    /* ── GET LIST ── */
+    .get-list { display: grid; gap: 12px; }
+    .get-item {
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+      font-size: 15px;
+    }
+    .get-item::before {
+      content: '✓';
+      color: var(--orange);
+      font-weight: 700;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    /* ── PROFILE ── */
+    .profile-wrap {
+      display: flex;
+      gap: 28px;
+      align-items: flex-start;
+      margin-bottom: 24px;
+    }
+    .profile-img {
+      width: 96px;
+      height: 96px;
+      border-radius: 50%;
+      object-fit: cover;
+      object-position: top;
+      flex-shrink: 0;
+      border: 3px solid var(--navy);
+    }
+    .profile-name {
+      font-family: 'Noto Serif JP', serif;
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 2px;
+    }
+    .profile-ruby { font-size: 12px; color: var(--text-light); margin-bottom: 10px; }
+    .profile-award {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      color: var(--navy);
+      border: 1px solid var(--navy);
+      padding: 2px 10px;
+      border-radius: 2px;
+      margin-bottom: 4px;
+    }
+    .profile-stat {
+      display: inline-flex;
+      align-items: baseline;
+      gap: 3px;
+      background: var(--orange-light);
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      color: var(--orange);
+      font-weight: 700;
+    }
+    .profile-stat strong { font-size: 18px; }
+    .profile-bio { font-size: 14px; color: var(--text-mid); line-height: 2; }
+    .profile-quote {
+      margin-top: 24px;
+      font-family: 'Noto Serif JP', serif;
+      font-size: 15px;
+      color: var(--navy);
+      line-height: 2;
+      padding: 24px 28px;
+      background: var(--bg-warm);
+      border-radius: 4px;
+      font-style: italic;
+      border-left: 3px solid var(--orange);
+    }
+
+    /* ── CONSULT ── */
+    .consult-box {
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      overflow: hidden;
+      margin-bottom: 32px;
+    }
+    .consult-head {
+      background: var(--navy);
+      color: #fff;
+      padding: 16px 24px;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .consult-head::before { content: '◎'; color: var(--orange); }
+    .consult-body { padding: 24px; }
+
+    /* ── VIDEO ── */
+    .video-placeholder {
+      background: #e8ebf0;
+      border-radius: 6px;
+      aspect-ratio: 16/9;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    /* ── FOOTER CTA ── */
+    .footer-cta {
+      background: var(--navy-dark);
+      color: #fff;
+      padding: 88px 0;
+      text-align: center;
+    }
+    .footer-cta h2 {
+      font-family: 'Noto Serif JP', serif;
+      font-size: clamp(22px, 4.5vw, 34px);
+      font-weight: 700;
+      line-height: 1.6;
+      margin-bottom: 10px;
+    }
+    .footer-cta p { font-size: 14px; opacity: 0.55; margin-bottom: 36px; }
+
+    .footer {
+      background: #0b1520;
+      color: rgba(255,255,255,0.22);
+      text-align: center;
+      padding: 18px;
+      font-size: 12px;
+    }
+
+    /* ── STICKY ── */
+    .sticky {
+      display: none;
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      background: #fff;
+      padding: 10px 16px 14px;
+      box-shadow: 0 -4px 24px rgba(0,0,0,0.10);
+      z-index: 300;
+    }
+
+    @media (max-width: 639px) {
+      .sticky { display: block; }
+      body { padding-bottom: 68px; }
+      .axis-grid { grid-template-columns: 1fr; }
+      .axis-card:first-child { border-right: none; border-bottom: 1px solid var(--line); }
+      .profile-wrap { flex-direction: column; gap: 16px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ━━ HERO ━━ -->
+<header class="hero">
+  <div class="wrap">
+    <span class="hero-badge">無料診断 · 6問 · 1〜2分で完了</span>
+
+    <h1>あなたがAIを<br>使いこなせない理由、<br><em>1〜2分</em>でわかります。</h1>
+
+    <div class="hero-stat">
+      <strong>4</strong>つのタイプから、あなたの「詰まりポイント」が特定されます。
+    </div>
+
+    <div class="hero-cta-wrap">
+      <a href="diagnostic.html" class="btn-main">無料診断を受ける（6問・1〜2分）→</a>
+      <a href="https://lin.ee/vnhl9qv" class="btn-sub">まず話を聞いてほしい方 → 無料相談（30分）</a>
+    </div>
+    <p class="hero-note">どちらもLINEで完結します。費用は一切かかりません。</p>
+  </div>
+</header>
+
+<!-- ━━ こんな人に ━━ -->
+<section class="section">
+  <div class="wrap">
+    <span class="sec-eyebrow">TARGET</span>
+    <h2 class="sec-title" style="font-family:'Noto Serif JP',serif;">こんな人に向いています</h2>
+    <p class="sec-lead">AIを使いこなしたいのに、なぜかうまくいかない。その「なぜか」を知りたい人へ。</p>
+    <img src="images/hero-ai-illustration.jpeg" alt="AI活用のイメージ" style="width:100%;border-radius:8px;margin-bottom:36px;object-fit:cover;max-height:240px;object-position:center 30%;">
+
+    <ul class="check-list">
+      <li>AIを触ってみたけど、なんか違う</li>
+      <li>何を質問すればいいかわからない</li>
+      <li>そもそも自分の課題が整理できていない</li>
+      <li>セミナーに行っても自分事にならなかった</li>
+      <li>「AI活用」と言われてもピンとこない</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ━━ 2軸の説明 ━━ -->
+<section class="section section-warm">
+  <div class="wrap">
+    <span class="sec-eyebrow">DIAGNOSTIC</span>
+    <h2 class="sec-title" style="font-family:'Noto Serif JP',serif;">使いこなせない理由は<br>2つの軸で決まる</h2>
+    <p class="sec-lead">「なんとなく使えていない」を感覚のまま放置すると、何年経っても変わりません。原因を特定するのが先です。</p>
+
+    <div class="axis-grid">
+      <div class="axis-card">
+        <div class="axis-number">01</div>
+        <p class="axis-tag">AXIS 1｜言語化</p>
+        <p class="axis-name">自分の課題を<br>言葉にできるか</p>
+        <p class="axis-desc">「何に困っているか」をAIに伝えられる状態かどうか。ここが整っていないと、どんなツールを使っても的外れな答えしか返ってこない。</p>
+      </div>
+      <div class="axis-card">
+        <div class="axis-number">02</div>
+        <p class="axis-tag">AXIS 2｜特性理解</p>
+        <p class="axis-name">AIで何ができるかを<br>知っているか</p>
+        <p class="axis-desc">AIの得意なこと・動かし方を知っているかどうか。知らないと、使えるはずの場面を毎回素通りしてしまう。</p>
+      </div>
+    </div>
+
+    <!-- 4タイプ概観図 -->
+    <img src="images/diagnostic-overview.jpeg" alt="4タイプ診断マトリクス" style="width:100%;border-radius:8px;margin-bottom:36px;object-fit:cover;">
+
+    <!-- 2x2 Quadrant -->
+    <div class="quadrant-wrap">
+      <p class="quadrant-title">この2軸で、あなたはどのタイプ？</p>
+
+      <div class="quadrant">
+          <div class="q-card">
+            <img src="images/type-no-question.jpeg" alt="問いが立てられないタイプ" class="q-card-img">
+            <p class="q-card-label">言語化× · 特性理解◯</p>
+            <p class="q-card-name">問いが立てられないタイプ</p>
+            <p class="q-card-desc">AIの知識はある。でも何を聞けばいいかが見えない。</p>
+          </div>
+          <div class="q-card" style="background:var(--orange-light);">
+            <img src="images/type-aligned.jpeg" alt="整っているタイプ" class="q-card-img">
+            <p class="q-card-label">言語化◯ · 特性理解◯</p>
+            <p class="q-card-name">整っているタイプ</p>
+            <p class="q-card-desc">すでに使いこなせている。次は人に伝える側へ。</p>
+          </div>
+          <div class="q-card" style="background:#f0f4f8;">
+            <img src="images/type-startline.jpeg" alt="スタートライン手前タイプ" class="q-card-img">
+            <p class="q-card-label">言語化× · 特性理解×</p>
+            <p class="q-card-name">スタートライン手前タイプ</p>
+            <p class="q-card-desc">何から始めればいいかもわからない。まずここから。</p>
+          </div>
+          <div class="q-card">
+            <img src="images/type-trial-error.jpeg" alt="手探り使いタイプ" class="q-card-img">
+            <p class="q-card-label">言語化◯ · 特性理解×</p>
+            <p class="q-card-name">手探り使いタイプ</p>
+            <p class="q-card-desc">課題はわかる。でもAIで何ができるかが見えない。</p>
+          </div>
+      </div>
+    </div>
+
+    <a href="diagnostic.html" class="btn-main" style="max-width:400px;margin:0 auto;">自分のタイプを診断する（無料）→</a>
+    <p style="font-size:12px;color:var(--text-light);text-align:center;margin-top:10px;">診断後、結果の詳細はLINEで届きます</p>
+  </div>
+</section>
+
+<!-- ━━ 診断の流れ ━━ -->
+<section class="section section-dark">
+  <div class="wrap">
+    <span class="sec-eyebrow" style="color:rgba(232,124,62,0.9);">HOW IT WORKS</span>
+    <h2 class="sec-title" style="color:#fff;font-family:'Noto Serif JP',serif;margin-bottom:8px;">診断を受けると<br>何が起きるか</h2>
+    <p style="font-size:15px;color:rgba(255,255,255,0.55);margin-bottom:40px;line-height:2;">登録から結果まで、すべてLINEで完結します。</p>
+
+    <div class="process-list">
+      <div class="process-item">
+        <div class="process-n">1</div>
+        <div style="flex:1;">
+          <p class="process-time">所要時間：30秒</p>
+          <p class="process-name">LINEで友だち登録する</p>
+          <p class="process-desc">LINEアカウントに登録すると、すぐに診断がスタートします。</p>
+        </div>
+        <img src="images/icon-step1-line.jpeg" alt="STEP1" class="process-icon">
+      </div>
+      <div class="process-item">
+        <div class="process-n">2</div>
+        <div style="flex:1;">
+          <p class="process-time">所要時間：1〜2分</p>
+          <p class="process-name">6問に答える</p>
+          <p class="process-desc">「AIをどう使っているか」「どこで詰まっているか」を中心に、6問に答えます。選択式なので1〜2分あれば完了します。</p>
+        </div>
+        <img src="images/icon-step2-questions.jpeg" alt="STEP2" class="process-icon">
+      </div>
+      <div class="process-item">
+        <div class="process-n">3</div>
+        <div style="flex:1;">
+          <p class="process-time">即時</p>
+          <p class="process-name">4タイプのどれかが届く</p>
+          <p class="process-desc">あなたのタイプと、使いこなせない理由が言語化された結果が届きます。</p>
+        </div>
+        <img src="images/icon-step3-quadrant.jpeg" alt="STEP3" class="process-icon">
+      </div>
+      <div class="process-item">
+        <div class="process-n">4</div>
+        <div style="flex:1;">
+          <p class="process-time">翌日から5日間</p>
+          <p class="process-name">タイプ別の処方箋が届く</p>
+          <p class="process-desc">あなたのタイプに合った「最初の一歩」「深め方」が5日間かけてLINEで届きます。読むだけでOKです。</p>
+        </div>
+        <img src="images/icon-step4-result.jpeg" alt="STEP4" class="process-icon">
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ━━ 動画 ━━ -->
+<section class="section">
+  <div class="wrap">
+    <span class="sec-eyebrow">VIDEO</span>
+    <h2 class="sec-title" style="font-family:'Noto Serif JP',serif;">まず声を聞いてみる</h2>
+    <p class="sec-lead">申し込む前に、まず話し方や雰囲気を確認してください。</p>
+    <div class="video-placeholder">
+      <p style="font-size:14px;color:var(--text-mid);">▶ 動画をここに埋め込む（YouTubeまたはLoom）</p>
+      <p style="font-size:12px;color:var(--text-light);">※ URLが決まり次第差し替えます</p>
+    </div>
+  </div>
+</section>
+
+<!-- ━━ プロフィール ━━ -->
+<section class="section section-warm">
+  <div class="wrap">
+    <span class="sec-eyebrow">PROFILE</span>
+    <h2 class="sec-title" style="font-family:'Noto Serif JP',serif;margin-bottom:28px;">診断をつくった人</h2>
+
+    <div class="profile-wrap">
+      <img src="images/Professional_profile_portrait_of_the_same_Japanese-1777420988266.png" alt="髙橋健太郎" class="profile-img">
+      <div>
+        <p class="profile-name">タカハシケンタロー</p>
+        <p class="profile-ruby">髙橋健太郎</p>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:12px;">
+          <span class="profile-award">Google for Startups 2025 優勝</span>
+          <span class="profile-stat">コンサル実績 <strong>100</strong>名以上</span>
+        </div>
+      </div>
+    </div>
+
+    <p class="profile-bio">
+      鹿児島を拠点に、経営者・個人事業主のAI活用支援をしています。鹿児島県商工会連合会のエキスパートとして、これまで100名以上の方と話してきました。<br><br>
+      セッションやセミナーで一番多くいただく言葉は「自分が何に悩んでいたのか、初めてわかった」です。AIが使えないんじゃなくて、自分の課題をうまく言葉にする場がなかっただけ——そういう人がほとんどです。<br><br>
+      この診断は、その「なぜ使いこなせないのか」を1〜2分で明らかにするために設計しました。
+    </p>
+
+    <div class="profile-quote">
+      診断まで来てくれたということは、何か変えたいことがあるはずです。その「何か」を一緒に言葉にしましょう。
+    </div>
+  </div>
+</section>
+
+<!-- ━━ 無料相談 ━━ -->
+<section class="section">
+  <div class="wrap">
+    <span class="sec-eyebrow">FREE CONSULTATION</span>
+    <h2 class="sec-title" style="font-family:'Noto Serif JP',serif;">診断より先に<br>話したい方へ</h2>
+    <p class="sec-lead">「まず話を聞いてほしい」「自分の状況を整理したい」という方は、診断を飛ばして相談から始めても大丈夫です。</p>
+
+    <img src="images/consult-video-call.jpeg" alt="無料個別相談" style="width:100%;border-radius:8px;margin-bottom:28px;object-fit:cover;max-height:220px;">
+
+    <div class="consult-box">
+      <div class="consult-head">無料個別相談（30分・オンライン）</div>
+      <div class="consult-body">
+        <div class="get-list">
+          <div class="get-item">あなたの仕事・業種・課題のヒアリング</div>
+          <div class="get-item">AIをどう活用できるか、方向性を一緒に整理する</div>
+          <div class="get-item">30分・Google Meet・完全無料</div>
+        </div>
+      </div>
+    </div>
+
+    <a href="https://lin.ee/vnhl9qv" class="btn-main" style="background:var(--navy);max-width:400px;margin:0 auto;">無料相談を申し込む →</a>
+    <p style="font-size:12px;color:var(--text-light);text-align:center;margin-top:10px;">日程調整ページに移動します</p>
+  </div>
+</section>
+
+<!-- ━━ FOOTER CTA ━━ -->
+<section class="footer-cta">
+  <div class="wrap">
+    <h2>まず、自分のタイプを<br>知るところから。</h2>
+    <p>診断は無料です。6問・1〜2分。タイプと処方箋がLINEで届きます。</p>
+    <div style="display:grid;gap:10px;max-width:440px;margin:0 auto 20px;">
+      <a href="diagnostic.html" class="btn-main">無料診断を受ける（6問・1〜2分）→</a>
+      <a href="https://lin.ee/vnhl9qv" class="btn-sub">まず話したい → 無料相談（30分）</a>
+    </div>
+    <p style="font-size:11px;opacity:0.3;">どちらもLINEで完結します。費用は一切かかりません。</p>
+  </div>
+</section>
+
+<footer class="footer">
+  © 2026 髙橋健太郎. All rights reserved.
+</footer>
+
+<!-- Sticky CTA (mobile) -->
+<div class="sticky">
+  <a href="diagnostic.html" class="btn-main" style="font-size:15px;padding:15px;">無料診断を受ける（6問・1〜2分）→</a>
+</div>
+
+</body>
+</html>
