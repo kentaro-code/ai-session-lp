@@ -406,16 +406,18 @@
     </div>
   </div>
 
-  <div style="background:var(--orange-light);border-radius:10px;padding:16px 18px;margin-bottom:12px;border:1px solid rgba(232,124,62,0.3);">
-    <p style="font-size:12px;color:var(--orange);font-weight:700;margin-bottom:8px;">① このテキストをコピーする</p>
-    <div style="display:flex;align-items:center;gap:10px;">
-      <p id="typeText" style="font-size:14px;font-weight:700;color:var(--navy);flex:1;"></p>
+  <div style="background:var(--orange-light);border-radius:10px;padding:20px 18px;margin-bottom:12px;border:1px solid rgba(232,124,62,0.3);text-align:center;">
+    <p style="font-size:13px;color:var(--orange);font-weight:700;margin-bottom:12px;">① 下のテキストをコピー</p>
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;">
+      <p id="typeText" style="font-size:15px;font-weight:700;color:var(--navy);flex:1;text-align:left;"></p>
       <button onclick="copyType()" id="copyBtn" style="background:var(--navy);color:#fff;border:none;border-radius:6px;padding:10px 16px;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap;flex-shrink:0;">コピー</button>
     </div>
+    <p style="font-size:13px;color:var(--orange);font-weight:700;margin-bottom:6px;">② このページを閉じてLINEに貼り付けて送信</p>
+    <p style="font-size:12px;color:var(--text-mid);">送信するとタイプ別の処方箋が5日間届きます</p>
   </div>
-  <a id="lineBtn" href="https://lin.ee/vnhl9qv" class="btn-line">
-    ② LINEで貼り付けて送信する
-    <span class="btn-line-sub">送信するとタイプ別の処方箋が5日間届きます・無料</span>
+  <a id="lineBtn" href="https://lin.ee/vnhl9qv" class="btn-line" id="lineBtn">
+    LINEを開く（まだ登録していない方）
+    <span class="btn-line-sub">すでにLINE登録済みの方はこのページを閉じて送信してください</span>
   </a>
   <p class="cta-note">費用は一切かかりません</p>
   <a href="https://lin.ee/vnhl9qv" class="btn-consult">まず話を聞いてほしい方 → 無料相談（30分）</a>
